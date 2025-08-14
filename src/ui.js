@@ -47,6 +47,17 @@ const GROUPS = [
             'chromaRadius',
         ],
     ],
+    [
+        '— FBM —',
+        [
+            'fbmEnabled',
+            'fbmAmp',
+            'fbmScale',
+            'fbmSpeed',
+            'fbmOctaves',
+            'fbmBlend',
+        ],
+    ],
 ];
 
 // Keys treated as integers for slider stepping/rounding
@@ -61,6 +72,7 @@ const INT_KEYS = new Set([
     'maxAgents',
     'jitterDeg',
     'expSpreadDeg',
+    'fbmOctaves',
 ]);
 
 /**
@@ -76,7 +88,7 @@ const INT_KEYS = new Set([
 export function buildParamPanel({
     P,
     R = null,
-    enforceCouplings = () => { },
+    enforceCouplings = () => {},
     onChange = null,
 } = {}) {
     if (!P) throw new Error('buildParamPanel: P is required');

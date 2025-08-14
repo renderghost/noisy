@@ -29,6 +29,13 @@ export const P = {
     distortSpeed: 1.0,
     chromaAmount: 0.8,
     chromaRadius: 2.0,
+    // FBM luminance modulation
+    fbmEnabled: true,
+    fbmAmp: 0.3, // 0..1 amplitude
+    fbmScale: 5.0, // spatial frequency
+    fbmSpeed: 1.0, // temporal speed
+    fbmOctaves: 4.0, // number of octaves (float for WebGL)
+    fbmBlend: 0.7, // 0..1 blend factor
 };
 
 export const R = {
@@ -56,6 +63,11 @@ export const R = {
     distortSpeed: [0.1, 5.0, 0.05],
     chromaAmount: [0.0, 2.0, 0.01],
     chromaRadius: [0.5, 10.0, 0.1],
+    fbmAmp: [0.0, 1.0, 0.01],
+    fbmScale: [1.0, 20.0, 0.1],
+    fbmSpeed: [0.1, 3.0, 0.05],
+    fbmOctaves: [1.0, 8.0, 1.0],
+    fbmBlend: [0.0, 1.0, 0.01],
 };
 
 const clamp = (v, [mn, mx]) => Math.max(mn, Math.min(mx, v));
@@ -80,6 +92,7 @@ export function coerce(key, v) {
             'startAgents',
             'minAgents',
             'maxAgents',
+            'fbmOctaves',
         ].includes(key)
     )
         return Math.round(v);
@@ -132,6 +145,11 @@ export function enforceCouplings(P) {
     P.distortSpeed = clamp(P.distortSpeed, R.distortSpeed);
     P.chromaAmount = clamp(P.chromaAmount, R.chromaAmount);
     P.chromaRadius = clamp(P.chromaRadius, R.chromaRadius);
+    P.fbmAmp = clamp(P.fbmAmp, R.fbmAmp);
+    P.fbmScale = clamp(P.fbmScale, R.fbmScale);
+    P.fbmSpeed = clamp(P.fbmSpeed, R.fbmSpeed);
+    P.fbmOctaves = Math.round(clamp(P.fbmOctaves, R.fbmOctaves));
+    P.fbmBlend = clamp(P.fbmBlend, R.fbmBlend);
 
     // Snap each parameter to the nearest multiple of its step size
     for (const key in P) {
@@ -289,4 +307,30 @@ export function randomiseParams(P, R) {
         R.chromaRadius[0] +
         Math.random() * (R.chromaRadius[1] - R.chromaRadius[0]);
     logRandomParam('chromaRadius', oldChromaRadius, P.chromaRadius);
+
+    const oldFbmAmp = P.fbmAmp;
+    P.fbmAmp = R.fbmAmp[0] + Math.random() * (R.fbmAmp[1] - R.fbmAmp[0]);
+    logRandomParam('fbmAmp', oldFbmAmp, P.fbmAmp);
+
+    const oldFbmScale = P.fbmScale;
+    P.fbmScale =
+        R.fbmScale[0] + Math.random() * (R.fbmScale[1] - R.fbmScale[0]);
+    logRandomParam('fbmScale', oldFbmScale, P.fbmScale);
+
+    const oldFbmSpeed = P.fbmSpeed;
+    P.fbmSpeed =
+        R.fbmSpeed[0] + Math.random() * (R.fbmSpeed[1] - R.fbmSpeed[0]);
+    logRandomParam('fbmSpeed', oldFbmSpeed, P.fbmSpeed);
+
+    const oldFbmOctaves = P.fbmOctaves;
+    P.fbmOctaves = Math.floor(
+        R.fbmOctaves[0] +
+            Math.random() * (R.fbmOctaves[1] - R.fbmOctaves[0] + 1)
+    );
+    logRandomParam('fbmOctaves', oldFbmOctaves, P.fbmOctaves);
+
+    const oldFbmBlend = P.fbmBlend;
+    P.fbmBlend =
+        R.fbmBlend[0] + Math.random() * (R.fbmBlend[1] - R.fbmBlend[0]);
+    logRandomParam('fbmBlend', oldFbmBlend, P.fbmBlend);
 }
