@@ -1,7 +1,7 @@
 import { P, R, enforceCouplings, randomiseParams } from './params.js';
 import { buildParamPanel, refreshPanelValues } from './ui.js';
 import { makeSim } from './sim.js';
-import { initPost, resizePost, drawPost } from './post.js';
+import { initPost, resizePost, drawPost } from './post/pipeline.js';
 
 // ---- globals used by p5
 let canvas,

@@ -36,19 +36,12 @@ const GROUPS = [
         ],
     ],
     [
-        '— Post FX —',
-        [
-            'noiseEnabled',
-            'chromaEnabled',
-            'distortAmp',
-            'distortScale',
-            'distortSpeed',
-            'chromaAmount',
-            'chromaRadius',
-        ],
+        '— PostFX: Distortion —',
+        ['noiseEnabled', 'distortAmp', 'distortScale', 'distortSpeed'],
     ],
+    ['— PostFX: Chroma —', ['chromaEnabled', 'chromaAmount', 'chromaRadius']],
     [
-        '— FBM —',
+        '— PostFX: FBM —',
         [
             'fbmEnabled',
             'fbmAmp',
