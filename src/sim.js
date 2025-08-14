@@ -38,6 +38,17 @@ function getMask(ix, iy, mask, W, H) {
 }
 
 // Factory to bind shared state without globals
+/**
+ * Creates simulation factory with dependency injection for shared state.
+ *
+ * @param {Object} shared - Shared dependencies object.
+ * @param {Function} shared.getW - Function returning canvas width.
+ * @param {Function} shared.getH - Function returning canvas height.
+ * @param {Function} shared.getMask - Function returning collision mask.
+ * @param {Object} shared.P - Parameters object.
+ * @param {Function} shared.tRef - Function returning current time.
+ * @returns {Object} Simulation factory with Agent class and seedAgent function.
+ */
 export function makeSim(shared) {
     // shared: { getW, getH, getMask, P, tRef }
     const { getW, getH, getMask, P, tRef } = shared;

@@ -29,6 +29,12 @@ const sim = makeSim({
 // ---------- setup / draw ----------
 window.setup = function () {
     calcCanvasSize();
+    console.log(
+        `[Canvas Setup] Calculated dimensions: W=${W}, H=${H} (${W}x${H})`
+    );
+    console.log(
+        `[Canvas Setup] Window dimensions: ${windowWidth}x${windowHeight}`
+    );
     canvas = createCanvas(W, H);
     centerCanvas();
     pixelDensity(1);
@@ -78,11 +84,11 @@ window.draw = function () {
 
     // render processed buffer to main canvas
     background(0);
-    image(processed || pg, 0, 0, width, height);
+    image(processed || pg, 0, 0, W, H);
     noFill();
     stroke(255);
     strokeWeight(4);
-    rect(0, 0, width, height);
+    rect(0, 0, W, H);
 
     t += 0.002;
 };
@@ -112,26 +118,32 @@ window.windowResized = function () {
 window.keyPressed = function () {
     if (key === 'r' || key === 'R') setup();
     if (key === 'x' || key === 'X') {
-        console.log(`[Param Update] ${new Date().toISOString()} | Randomize Key Pressed | Starting parameter randomization | Frame: ${frameCount || 'N/A'}`);
-        
+        console.log(
+            `[Param Update] ${new Date().toISOString()} | Randomize Key Pressed | Starting parameter randomization | Frame: ${frameCount || 'N/A'}`
+        );
+
         // Store old values for detailed logging
         const oldValues = {};
         for (const key in P) {
             oldValues[key] = P[key];
         }
-        
+
         randomiseParams(P, R);
         enforceCouplings(P);
         refreshPanelValues(P);
-        
+
         // Log detailed parameter changes
-        console.log(`[Param Update] ${new Date().toISOString()} | Randomize Complete | All parameters randomized:`);
+        console.log(
+            `[Param Update] ${new Date().toISOString()} | Randomize Complete | All parameters randomized:`
+        );
         for (const key in P) {
             if (oldValues[key] !== P[key]) {
-                console.log(`[Param Update]   ${key}: ${oldValues[key]} → ${P[key]}`);
+                console.log(
+                    `[Param Update]   ${key}: ${oldValues[key]} → ${P[key]}`
+                );
             }
         }
-        
+
         setup();
     }
     if (key === 's' || key === 'S') saveCanvas('bw-agents', 'png');
@@ -149,7 +161,8 @@ function calcCanvasSize() {
     H = floor(h);
 }
 function centerCanvas() {
-    const x = (windowWidth - width) / 2;
-    const y = (windowHeight - height) / 2;
+    const x = (windowWidth - W) / 2;
+    const y = (windowHeight - H) / 2;
+    console.log(`[Canvas Position] Centering canvas at (${x}, ${y})`);
     canvas.position(x, y);
 }

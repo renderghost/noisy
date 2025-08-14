@@ -63,10 +63,20 @@ const INT_KEYS = new Set([
     'expSpreadDeg',
 ]);
 
+/**
+ * Builds dynamic parameter control panel with grouped controls.
+ *
+ * @param {Object} options - Configuration options.
+ * @param {Object} options.P - Parameters object to control.
+ * @param {Object} [options.R] - Ranges object defining parameter bounds.
+ * @param {Function} [options.enforceCouplings] - Function to enforce parameter constraints.
+ * @param {Function} [options.onChange] - Callback for parameter changes.
+ * @returns {p5.Element} Panel div element.
+ */
 export function buildParamPanel({
     P,
     R = null,
-    enforceCouplings = () => {},
+    enforceCouplings = () => { },
     onChange = null,
 } = {}) {
     if (!P) throw new Error('buildParamPanel: P is required');
@@ -128,16 +138,18 @@ export function buildParamPanel({
                 const key = slider.elt.dataset.key;
                 const oldValue = P[key];
                 const value = slider.checked();
-                
+
                 // Update model immediately
                 P[key] = value;
-                
+
                 // Apply couplings and refresh panel
                 enforceCouplings(P);
                 refreshPanelValues(P);
-                
+
                 // Verbose logging with timestamp and frame information
-                console.log(`[Param Update] ${new Date().toISOString()} | Checkbox Toggle | ${key}: ${oldValue} → ${value} | Frame: ${frameCount || 'N/A'}`);
+                console.log(
+                    `[Param Update] ${new Date().toISOString()} | Checkbox Toggle | ${key}: ${oldValue} → ${value} | Frame: ${frameCount || 'N/A'}`
+                );
             });
         } else {
             // Handle slider changes (existing logic)
@@ -150,16 +162,18 @@ export function buildParamPanel({
                 const raw = slider.value();
                 const oldValue = P[key];
                 const value = INT_KEYS.has(key) ? Math.round(raw) : Number(raw);
-                
+
                 // Update model immediately
                 P[key] = value;
-                
+
                 // Apply couplings and refresh panel
                 enforceCouplings(P);
                 refreshPanelValues(P);
-                
+
                 // Verbose logging with timestamp and frame information
-                console.log(`[Param Update] ${new Date().toISOString()} | Slider Input | ${key}: ${oldValue} → ${value} | Frame: ${frameCount || 'N/A'}`);
+                console.log(
+                    `[Param Update] ${new Date().toISOString()} | Slider Input | ${key}: ${oldValue} → ${value} | Frame: ${frameCount || 'N/A'}`
+                );
             });
 
             // Apply couplings and refresh only after user finishes adjusting
@@ -182,6 +196,11 @@ export function buildParamPanel({
     return panelDiv;
 }
 
+/**
+ * Synchronizes UI controls with current parameter values.
+ *
+ * @param {Object} [PArg] - Optional parameters object (uses stored state if omitted).
+ */
 export function refreshPanelValues(PArg) {
     if (!panelDiv) return;
     const st = panelDiv._state || {};
@@ -248,13 +267,13 @@ function addRow(parent, key, P, range) {
         const checkbox = createCheckbox('', P[key]).parent(row);
         checkbox.style('margin-left', '6px');
         checkbox.style('transform', 'scale(1.2)');
-        
+
         panelDiv._ui[key] = { slider: checkbox, span: val };
     } else {
         const [mn, mx, step] = range;
         const s = createSlider(mn, mx, P[key], step).parent(row);
         s.style('width', '100%');
-        
+
         panelDiv._ui[key] = { slider: s, span: val };
     }
 }
