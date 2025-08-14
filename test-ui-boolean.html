@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>UI Boolean Test</title>
+</head>
+<body style="margin: 0; background: #222">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.min.js"></script>
+    <script type="module">
+        // Mock parameters with boolean values for testing
+        const P = {
+            // Boolean parameters (should render as checkboxes)
+            noiseEnabled: true,
+            chromaEnabled: false,
+            // Numeric parameters (should render as sliders)  
+            speed: 2.0,
+            noiseScale: 0.005
+        };
+
+        const R = {
+            speed: [0.6, 3.5, 0.05],
+            noiseScale: [0.001, 0.008, 0.0001]
+        };
+
+        const enforceCouplings = (P) => {
+            console.log('enforceCouplings called with:', P);
+        };
+
+        // Import the UI module and test it
+        import { buildParamPanel, refreshPanelValues } from './src/ui.js';
+
+        window.setup = function() {
+            createCanvas(400, 300);
+            
+            // Build the parameter panel - should show checkboxes for boolean values
+            const paramPanel = buildParamPanel({ P, R, enforceCouplings });
+            
+            console.log('UI Panel built. Check the bottom-right for:');
+            console.log('- noiseEnabled: should be a CHECKBOX (currently true)');
+            console.log('- chromaEnabled: should be a CHECKBOX (currently false)');
+            console.log('- speed: should be a SLIDER');
+            console.log('- noiseScale: should be a SLIDER');
+        };
+
+        window.draw = function() {
+            background(50);
+            fill(255);
+            textAlign(CENTER);
+            text('Check bottom-right panel for boolean checkboxes', width/2, height/2);
+            text('Open console to see change logs', width/2, height/2 + 20);
+        };
+    </script>
+</body>
+</html>

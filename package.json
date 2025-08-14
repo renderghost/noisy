@@ -1,0 +1,29 @@
+{
+    "name": "noisy",
+    "version": "1.0.0",
+    "description": "A real-time generative art piece featuring autonomous agents drawing on a canvas with advanced parameter controls and post-processing effects.",
+    "main": "index.js",
+    "scripts": {
+        "start": "live-server --port=8000 --host=localhost --open=/",
+        "dev": "live-server --port=8000 --host=localhost --open=/ --watch=src/,index.html",
+        "serve": "live-server --port=8000 --host=localhost",
+        "test": "node test-validation.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/renderghost/noisy.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/renderghost/noisy/issues"
+    },
+    "homepage": "https://github.com/renderghost/noisy#readme",
+    "devDependencies": {
+        "live-server": "^1.2.2",
+        "prettier": "^3.6.2",
+        "prettier-plugin-tailwindcss": "^0.6.14"
+    }
+}
