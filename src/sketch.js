@@ -12,7 +12,7 @@ let W,
     H,
     t = 0;
 let paramDiv,
-    panelVisible = true;
+    panelVisible = false;
 
 const MAX_CANVAS_H = 720,
     ASPECT = 9 / 16;
@@ -56,7 +56,10 @@ window.setup = function () {
     // Initialize post-processing
     initPost(W, H);
 
-    if (!paramDiv) paramDiv = buildParamPanel({ P, R, enforceCouplings });
+    if (!paramDiv) {
+        paramDiv = buildParamPanel({ P, R, enforceCouplings });
+        paramDiv.style('display', panelVisible ? 'block' : 'none');
+    }
     frameRate(60);
 };
 
