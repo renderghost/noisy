@@ -2,7 +2,7 @@
 
 **Project**: Noisy - Generative Agent-Based Art
 **Location**: `~/code/noisy`
-**Last Updated**: 2025-08-14
+**Last Updated**: 2025-11-05
 **Current Status**: Active Development
 
 ## 🎯 Project Overview
@@ -18,6 +18,16 @@ A real-time generative art piece featuring autonomous agents with advanced param
 - Live-server for development
 
 ## 📝 Decision Log
+
+### 2025-11-05 - Fixed Non-Functional Post-Processing Sliders
+
+- **Issue**: Post-processing effect sliders (distortAmp, chromaAmount, fbmAmp, etc.) were moving but producing no visible changes
+- **Root Cause**: Effects were gated by boolean enable flags (`noiseEnabled`, `chromaEnabled`, `fbmEnabled`) that defaulted to `false` in `params.js`. Users had to manually toggle checkboxes before sliders would work.
+- **Solution**:
+  1. Changed default values from `false` to `true` for all three enable flags in `params.js`
+  2. Added auto-enable logic in `ui.js` slider input handler to automatically enable effects when amplitude parameters are adjusted above zero
+- **Impact**: All post-processing sliders now produce immediate visual effects. Improved UX eliminates need for manual checkbox toggling.
+- **Files Modified**: `src/params.js` (lines 25, 30, 34), `src/ui.js` (lines 175-183)
 
 ### 2025-08-14 - Critical Correction: P5.js Framework
 

@@ -90,6 +90,15 @@ export function buildParamPanel({
     panelDiv = createDiv('');
     stylePanel(panelDiv);
 
+    // Add panel title
+    const title = createDiv('Parameters').parent(panelDiv);
+    title.style('font-size', '16px');
+    title.style('font-weight', 'bold');
+    title.style('margin-bottom', '16px');
+    title.style('padding-bottom', '12px');
+    title.style('border-bottom', '1px solid #555');
+    title.style('color', '#fff');
+
     // keep state so refreshPanelValues() can be called without args
     panelDiv._state = { P, R, enforceCouplings, onChange };
     panelDiv._ui = {}; // { key: { slider: p5.Element, span: p5.Element } }
@@ -123,8 +132,12 @@ export function buildParamPanel({
     const hint = createDiv(
         'Keys: r=reset, x=randomise, h=show/hide, s=save'
     ).parent(panelDiv);
-    hint.style('margin-top', '10px');
-    hint.style('color', '#aaa');
+    hint.style('margin-top', '20px');
+    hint.style('padding-top', '16px');
+    hint.style('border-top', '1px solid #333');
+    hint.style('font-size', '10px');
+    hint.style('color', '#777');
+    hint.style('line-height', '1.4');
 
     // Wire inputs
     for (const k in panelDiv._ui) {
@@ -170,6 +183,17 @@ export function buildParamPanel({
 
                 // Update model immediately
                 P[key] = value;
+
+                // Auto-enable post-FX when their amplitude parameters are adjusted
+                if (key === 'distortAmp' && value > 0 && !P.noiseEnabled) {
+                    P.noiseEnabled = true;
+                }
+                if (key === 'chromaAmount' && value > 0 && !P.chromaEnabled) {
+                    P.chromaEnabled = true;
+                }
+                if (key === 'fbmAmp' && value > 0 && !P.fbmEnabled) {
+                    P.fbmEnabled = true;
+                }
 
                 // Apply couplings and refresh panel
                 enforceCouplings(P);
@@ -234,38 +258,81 @@ export function togglePanel(show) {
 // ---------- helpers ----------
 function stylePanel(wrap) {
     wrap.style('position', 'fixed');
-    wrap.style('bottom', '10px');
-    wrap.style('right', '10px');
-    wrap.style('width', '320px');
-    wrap.style('height', '420px');
+    wrap.style('top', '0');
+    wrap.style('right', '0');
+    wrap.style('bottom', '0');
+    wrap.style('width', '360px');
+    wrap.style('height', '100vh');
     wrap.style('overflow-y', 'auto');
-    wrap.style('background', 'rgba(0,0,0,0.85)');
+    wrap.style('overflow-x', 'hidden');
+    wrap.style('background', 'rgba(0,0,0,0.92)');
     wrap.style('color', '#fff');
     wrap.style('font-family', 'monospace');
     wrap.style('font-size', '12px');
-    wrap.style('padding', '10px');
+    wrap.style('padding', '20px 16px');
     wrap.style('z-index', '9999');
-    wrap.style('border', '1px solid #444');
+    wrap.style('border-left', '2px solid #555');
+    wrap.style('box-shadow', '-4px 0 12px rgba(0,0,0,0.5)');
+    wrap.style('box-sizing', 'border-box');
+
+    // Custom scrollbar styling via CSS class
+    wrap.addClass('param-panel');
+    
+    // Inject CSS for scrollbar styling if not already present
+    if (!document.getElementById('param-panel-styles')) {
+        const style = document.createElement('style');
+        style.id = 'param-panel-styles';
+        style.textContent = `
+            .param-panel::-webkit-scrollbar {
+                width: 8px;
+            }
+            .param-panel::-webkit-scrollbar-track {
+                background: rgba(0,0,0,0.3);
+            }
+            .param-panel::-webkit-scrollbar-thumb {
+                background: rgba(255,255,255,0.2);
+                border-radius: 4px;
+            }
+            .param-panel::-webkit-scrollbar-thumb:hover {
+                background: rgba(255,255,255,0.3);
+            }
+        `;
+        document.head.appendChild(style);
+    }
 }
 
 function addGroupHeader(parent, title) {
     const h = createElement('div', title).parent(parent);
-    h.style('margin', '8px 0 4px');
-    h.style('color', '#bbb');
+    h.style('margin', '16px 0 8px');
+    h.style('font-size', '11px');
+    h.style('font-weight', 'bold');
+    h.style('text-transform', 'uppercase');
+    h.style('letter-spacing', '0.5px');
+    h.style('color', '#888');
 }
 
 function addRow(parent, key, P, range) {
     const row = createDiv('').parent(parent);
-    row.style('margin', '6px 0');
+    row.style('margin', '12px 0');
+    row.style('display', 'flex');
+    row.style('flex-direction', 'column');
+    row.style('gap', '4px');
 
-    const label = createSpan(key).parent(row);
-    label.style('display', 'inline-block');
-    label.style('width', '120px');
+    // Label and value on same line
+    const labelRow = createDiv('').parent(row);
+    labelRow.style('display', 'flex');
+    labelRow.style('justify-content', 'space-between');
+    labelRow.style('align-items', 'center');
 
-    const val = createSpan(formatVal(P[key])).parent(row);
+    const label = createSpan(key).parent(labelRow);
+    label.style('font-size', '11px');
+    label.style('color', '#ccc');
+
+    const val = createSpan(formatVal(P[key])).parent(labelRow);
     val.id(`${key}_value`);
     val.style('color', '#0f0');
-    val.style('margin-left', '6px');
+    val.style('font-size', '11px');
+    val.style('font-weight', 'bold');
 
     // Detect boolean values and render checkbox instead of slider
     if (typeof P[key] === 'boolean') {

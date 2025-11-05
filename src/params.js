@@ -22,16 +22,16 @@ export const P = {
     minAgents: 20,
     maxAgents: 100,
     // Post-processing: Distortion
-    noiseEnabled: false,
+    noiseEnabled: true,
     distortAmp: 0.1,
     distortScale: 10.0,
     distortSpeed: 1.0,
     // Post-processing: Chroma
-    chromaEnabled: false,
+    chromaEnabled: true,
     chromaAmount: 0.8,
     chromaRadius: 2.0,
     // Post-processing: FBM luminance modulation
-    fbmEnabled: false,
+    fbmEnabled: true,
     fbmAmp: 0.3, // 0..1 amplitude
     fbmScale: 5.0, // spatial frequency
     fbmSpeed: 1.0, // temporal speed
